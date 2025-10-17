@@ -10,10 +10,13 @@ public class CollectionManager : MonoBehaviour
         public Transform slotTransform; // The position/rotation where the item should go
         public bool isFilled = false;
     }
+    [Header("General assigners")]
+    [SerializeField] private WorldLocation story;
+
     [Header("Puzzle details")]
-    [SerializeField] private GameObject reward;
-    [SerializeField] private GameObject lightBeam;
     [SerializeField] private NPC_Alpaca floris;
+    [SerializeField] private NPC_Wolf bobo;
+    [SerializeField] private NPC_Duck kwek;
     [SerializeField] private string puzzleName = "";
 
 
@@ -41,11 +44,13 @@ public class CollectionManager : MonoBehaviour
         switch (puzzleName)
         {
             case "tennisballs":
-                if (reward != null) reward.SetActive(true);
-                if (lightBeam != null) lightBeam.SetActive(false);
+                if (kwek != null) kwek.satisfyTask = true;
                 break;
             case "groceries":
                 if (floris != null) floris.satisfyTask = true;
+                break;
+            case "wolf":
+                if (bobo != null) bobo.satisfyTask = true;
                 break;
         }
     }

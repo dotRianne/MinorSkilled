@@ -12,6 +12,9 @@ public class ConveyorPath : MonoBehaviour
     [Header("State")]
     public bool isActive = true;
 
+    public GameObject leverOn;
+    public GameObject leverOff;
+
     void Awake()
     {
         RecalculatePath();

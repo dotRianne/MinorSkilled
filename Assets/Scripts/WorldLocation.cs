@@ -9,13 +9,41 @@ public class WorldLocation : MonoBehaviour
     [SerializeField] private TMP_Text TXT_story;
     [SerializeField] private GameObject prestory1;
     [SerializeField] private GameObject prestory2;
+    [SerializeField] private CollectiblesManager collectManager;
 
     private string currentArea;
     private IEnumerator coroutine;
 
+    [Header("Story")]
     [SerializeField] private int storyStep = -1;
     private bool pregameScreen1 = true;
     private bool pregameScreen2 = true;
+
+    [HideInInspector] public bool helpedFox;
+    [HideInInspector] public bool helpedDuck;
+    [HideInInspector] public bool helpedDeer;
+    [Header("Streets")]
+    [SerializeField] private bool helpedAllStreets = false;
+    [SerializeField] private GameObject streetsWall;
+    public int streetsMinimumBone;
+
+    [HideInInspector] public bool helpedPenguins;
+    [HideInInspector] public bool helpedAlpaca;
+    [HideInInspector] public bool helpedDog;
+    [HideInInspector] public bool helpedWolf;
+    [Header("Market")]
+    [SerializeField] private bool helpedAllMarket = false;
+    [SerializeField] private GameObject marketWall;
+    public int marketMinimumBones;
+
+    [HideInInspector] public bool helpedBird;
+    [HideInInspector] public bool helpedSquirrel;
+    [HideInInspector] public bool helpedChicken;
+    [HideInInspector] public bool helpedFish;
+    [Header("Construction")]
+    [SerializeField] private bool helpedAllConstruction = false;
+    [SerializeField] private GameObject constructionWall;
+    public int constructionMinimumBones;
 
     private void Start()
     {
@@ -35,6 +63,21 @@ public class WorldLocation : MonoBehaviour
             pregameScreen2 = false;
             prestory2.SetActive(false);
         }
+        if(helpedDog && helpedAlpaca && helpedPenguins && helpedWolf && !helpedAllMarket && collectManager.collectedBones >= marketMinimumBones)
+        {
+            helpedAllMarket = true;
+            marketWall.SetActive(false);
+        }
+        if (helpedDeer && helpedDuck && helpedFox && !helpedAllStreets && collectManager.collectedBones >= streetsMinimumBone)
+        {
+            helpedAllStreets = true;
+            streetsWall.SetActive(false);
+        }
+        if (helpedBird && helpedChicken && helpedFish && helpedSquirrel && !helpedAllConstruction && collectManager.collectedBones >= constructionMinimumBones)
+        {
+            helpedAllConstruction = true;
+            constructionWall.SetActive(false);
+        }
     }
 
     public void AreaMessage(string area, string text)
@@ -44,6 +87,7 @@ public class WorldLocation : MonoBehaviour
             currentArea = area;
             TXT_notif.SetText(text);
             coroutine = ClearNotif(3f);
+            StopCoroutine(coroutine);
             StartCoroutine(coroutine);
         }
     }
@@ -51,11 +95,6 @@ public class WorldLocation : MonoBehaviour
     {
         yield return new WaitForSeconds(waitTime);
         TXT_notif.SetText("");
-    }
-    private IEnumerator ClearStory(float waitTime)
-    {
-        yield return new WaitForSeconds(waitTime);
-        TXT_story.SetText("");
     }
 
     public void StepInStory(int step)
@@ -79,13 +118,13 @@ public class WorldLocation : MonoBehaviour
                 TXT_story.SetText("Escape the garden.");
                 break;
             case 3:
-                TXT_story.SetText("Find someone for directions.");
+                TXT_story.SetText("Head to the market.");
                 break;
             case 4:
-                TXT_story.SetText("Find this 'berd' person.");
+                TXT_story.SetText("Head to the construction site.");
                 break;
             case 5:
-                TXT_story.SetText("Bring Berd's marbles to Alice.");
+                TXT_story.SetText("Head to the Animal Sanctuary");
                 break;
         }
     }

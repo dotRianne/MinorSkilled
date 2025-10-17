@@ -5,12 +5,14 @@ using UnityEngine;
 public class NPC_Alpaca : MonoBehaviour
 {
     public CollectiblesManager collectManager;
+    public WorldLocation locationManager;
     public NPCinfo npcInfo;
 
     [SerializeField] private TMP_Text TXT_input;
     [SerializeField] private TMP_Text TXT_notif;
     [SerializeField] private TMP_Text TXT_story;
     [SerializeField] private GameObject lightBeam;
+    [SerializeField] private GameObject reward;
 
     [HideInInspector] public bool satisfyTask = false;
     [HideInInspector] public bool paidReward = false;
@@ -31,15 +33,18 @@ public class NPC_Alpaca : MonoBehaviour
             if (satisfyTask)
             {
                 paidReward = true;
-                collectManager.Increase("bone", 1);
-                TXT_notif.SetText("Thanks! You should head to the construction site. Someone there will help you further.");
+                TXT_notif.SetText("Thanks! Have this for the effort.");
                 TXT_input.SetText("");
+                StopCoroutine(coroutine);
                 StartCoroutine(coroutine);
                 lightBeam.SetActive(false);
+                reward.SetActive(true);
+                locationManager.helpedAlpaca = true;
             }
             else if (!satisfyTask)
             {
-                TXT_notif.SetText("You havent collected everything for me yet. I need a tomato, buns, lettuce, a carrot and potatoes.");
+                TXT_notif.SetText("You're still missing some stuff. Make sure its in the crate!");
+                StopCoroutine(coroutine);
                 StartCoroutine(coroutine);
             }
             else Debug.Log("We got past all options somehow. check code for errors.");
@@ -47,8 +52,9 @@ public class NPC_Alpaca : MonoBehaviour
         else if (!hasTalked && playerInRange && Input.GetKeyDown(KeyCode.E))
         {
             hasTalked = true;
+            StopCoroutine(coroutine);
             StartCoroutine(coroutine);
-            TXT_notif.SetText("I can guide you, but first do my groceries. I need a tomato, buns, lettuce, a carrot and potatoes.");
+            TXT_notif.SetText("Could you help me get my groceries in the crate?");
         }
     }
 
@@ -64,7 +70,7 @@ public class NPC_Alpaca : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            playerInRange = true;
+            playerInRange = false;
             TXT_input.SetText("");
         }
     }

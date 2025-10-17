@@ -11,7 +11,6 @@ public class Collectible : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             manager.Increase(type, amount);
-            manager.Trigger(type);
             Destroy(this.gameObject);
         }
     }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class NPC_Jake : MonoBehaviour
 {
+    public WorldLocation locationManager;
     public CollectiblesManager collectManager;
     public NPCinfo npcInfo;
 
@@ -11,6 +12,7 @@ public class NPC_Jake : MonoBehaviour
     [SerializeField] private TMP_Text TXT_notif;
     [SerializeField] private TMP_Text TXT_story;
     [SerializeField] private GameObject lightBeam;
+    [SerializeField] private GameObject reward;
 
     private bool satisfyTask = false;
     private bool playerInRange = false;
@@ -30,10 +32,11 @@ public class NPC_Jake : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.E))
             {
                 satisfyTask = true;
-                collectManager.Increase("bone", 1);
-                TXT_notif.SetText("Wow that was amazing! Have this bone!");
+                locationManager.helpedFox = true;
+                TXT_notif.SetText("Wow that was amazing! Here, have this!");
                 TXT_input.SetText("");
                 lightBeam.SetActive(false);
+                reward.SetActive(true);
                 StartCoroutine(coroutine);
             }
         }

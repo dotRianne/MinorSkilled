@@ -8,15 +8,13 @@ public class CollectiblesManager : MonoBehaviour
     [SerializeField] private TMP_Text TXT_notif;
     [SerializeField] private TMP_Text TXT_gems;
     [SerializeField] private TMP_Text TXT_bones;
+    [SerializeField] private TMP_Text TXT_marbles;
 
     public int collectedGems;
     public int collectedBones;
+    public int collectedMarbles;
 
     private IEnumerator clear;
-
-    public void Trigger(string type)
-    {
-    }
 
     public void Increase(string type, int amount)
     {
@@ -27,12 +25,21 @@ public class CollectiblesManager : MonoBehaviour
                 collectedGems += amount;
                 TXT_notif.SetText("You collected a gem!");
                 TXT_gems.SetText(collectedGems.ToString() + " gems");
+                StopCoroutine(clear);
                 StartCoroutine(clear);
                 break;
             case "bone":
                 collectedBones += amount;
                 TXT_notif.SetText("You collected a bone!");
                 TXT_bones.SetText(collectedBones.ToString() + " bones");
+                StopCoroutine(clear);
+                StartCoroutine(clear);
+                break;
+            case "marbles":
+                collectedMarbles += amount;
+                TXT_notif.SetText("You collected a marble!");
+                TXT_marbles.SetText(collectedMarbles.ToString() + " / 22");
+                StopCoroutine(clear);
                 StartCoroutine(clear);
                 break;
         }
@@ -47,7 +54,11 @@ public class CollectiblesManager : MonoBehaviour
                 break;
             case "bone":
                 collectedBones -= amount;
-                TXT_gems.SetText(collectedBones.ToString() + " bones");
+                TXT_bones.SetText(collectedBones.ToString() + " bones");
+                break;
+            case "marbles":
+                collectedMarbles -= amount;
+                TXT_marbles.SetText(collectedMarbles.ToString() + " / 22");
                 break;
         }
     }

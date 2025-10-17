@@ -6,6 +6,7 @@ public class CollectibleItem : MonoBehaviour
 {
     public int itemID;
     public bool collected = false;
+    public Vector3 placeScale;
 
     [Header("References")]
     public Transform holdSpot;   // Assigned manually in Inspector
@@ -112,7 +113,7 @@ public class CollectibleItem : MonoBehaviour
         transform.SetParent(slot.slotTransform);
         transform.position = slot.slotTransform.position;
         transform.rotation = slot.slotTransform.rotation;
-        transform.localScale = new Vector3(1f, 0.6f, 1f);
+        transform.localScale = placeScale;
         collected = true;
         currentlyHeldItem = null;
         slot.isFilled = true;

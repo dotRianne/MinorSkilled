@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Audio;
 using TMPro;
+using UnityEngine.VFX;
 
 public class Tailwhip : MonoBehaviour
 {
@@ -28,9 +29,13 @@ public class Tailwhip : MonoBehaviour
     public BoxTrigger boxTrigger1;
     public BoxTrigger boxTrigger2;
 
+    [Header("PenguinTask Settings")]
+    public bool isPenguinTask;
+    public NPC_Penguins npcPenguins;
+
     private void Start()
     {
-        audioSource = GetComponent<AudioSource>();
+        if(audioSource == null) GetComponent<AudioSource>();
         if(soundClip != null ) audioSource.clip = soundClip;
     }
 
@@ -71,6 +76,15 @@ public class Tailwhip : MonoBehaviour
                     boxTrigger2.canPull = true;
                 }
                 isWhippable = false;
+            }
+        }
+        if (isPenguinTask)
+        {
+            if (isInRange && Input.GetMouseButtonDown(1))
+            {
+                if (playSound) audioSource.Play();
+                npcPenguins.brokenVases += 1;
+                gameObject.SetActive(false);
             }
         }
     }
