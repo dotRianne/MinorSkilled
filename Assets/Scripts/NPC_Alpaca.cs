@@ -60,7 +60,7 @@ public class NPC_Alpaca : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Player" && !satisfyTask)
+        if (other.gameObject.tag == "Player" && !paidReward)
         {
             playerInRange = true;
             TXT_input.SetText("[E] Talk to " + npcInfo.charName);

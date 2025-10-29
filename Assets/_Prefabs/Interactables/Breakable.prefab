@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4463136783493015088}
   - component: {fileID: 7661226793637160550}
   m_Layer: 0
-  m_Name: Rubble
+  m_Name: Breakable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

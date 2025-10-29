@@ -17,6 +17,7 @@ public class CollectionManager : MonoBehaviour
     [SerializeField] private NPC_Alpaca floris;
     [SerializeField] private NPC_Wolf bobo;
     [SerializeField] private NPC_Duck kwek;
+    [SerializeField] private NPC_Bird pablo;
     [SerializeField] private string puzzleName = "";
 
 
@@ -51,6 +52,9 @@ public class CollectionManager : MonoBehaviour
                 break;
             case "wolf":
                 if (bobo != null) bobo.satisfyTask = true;
+                break;
+            case "bird":
+                if (pablo != null) pablo.satisfyTask = true;
                 break;
         }
     }

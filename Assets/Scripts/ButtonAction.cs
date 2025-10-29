@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor.Search;
 using UnityEngine;
 
 public class ButtonAction : MonoBehaviour
@@ -29,6 +30,11 @@ public class ButtonAction : MonoBehaviour
     private float elapsedTime = 0f;
     private Quaternion startRotation;
     private Quaternion endRotation;
+
+    // OpenDoor variables
+    [Header("OpenGarage variables")]
+    [SerializeField] private NPC_Chicken emil;
+    private bool doorIsOpen = false;
 
     private void Start()
     {
@@ -120,6 +126,16 @@ public class ButtonAction : MonoBehaviour
                         lightOff.SetActive(false);
                         lightOn.SetActive(true);
                     }
+                }
+                break;
+            case "OpenDoor":
+                if (doorIsOpen == false)
+                {
+                    targetObject.transform.rotation = Quaternion.Euler(-90, 0, 15);
+                    doorIsOpen = true;
+                    TXT_input.SetText("");
+                    playerInside = false;
+                    emil.openedDoor = true;
                 }
                 break;
             default:

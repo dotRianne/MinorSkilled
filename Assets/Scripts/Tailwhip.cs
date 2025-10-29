@@ -53,7 +53,7 @@ public class Tailwhip : MonoBehaviour
                 {
                     BoxCollider collider = this.GetComponent<BoxCollider>();
                     collider.enabled = false;
-                    enableObj.SetActive(true);
+                    if (enableObj != null) enableObj.SetActive(true);
                     disableObj.SetActive(false);
                 }
                 if (!toggleEnabled)

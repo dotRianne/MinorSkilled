@@ -124,7 +124,10 @@ public class WorldLocation : MonoBehaviour
                 TXT_story.SetText("Head to the construction site.");
                 break;
             case 5:
-                TXT_story.SetText("Head to the Animal Sanctuary");
+                TXT_story.SetText("Head to the Animal Sanctuary.");
+                break;
+            case 6:
+                TXT_story.SetText("Head up to the bird.");
                 break;
         }
     }
