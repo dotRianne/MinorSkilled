@@ -41,7 +41,6 @@ public class NPC_Chicken : MonoBehaviour
                 lightBeam.SetActive(false);
                 reward.SetActive(true);
                 TXT_notif.SetText("Thanks for helping, have this!");
-                StopCoroutine(coroutine);
                 StartCoroutine(coroutine);
             }
             else if (!satisfyTask)
@@ -49,20 +48,17 @@ public class NPC_Chicken : MonoBehaviour
                 if (!hasTalked)
                 {
                     TXT_notif.SetText("I lost my keys.. Can you find a way in to open the door for me?");
-                    StopCoroutine(coroutine);
                     StartCoroutine(coroutine);
                     hasTalked = true;
                 }
                 else if(hasTalked && !openedDoor)
                 {
                     TXT_notif.SetText("I just need you to find a way in and open the door..");
-                    StopCoroutine(coroutine);
                     StartCoroutine(coroutine);
                 }
                 else if (hasTalked && openedDoor)
                 {
                     TXT_notif.SetText("Thanks! meet me inside for a reward!");
-                    StopCoroutine(coroutine);
                     StartCoroutine(coroutine);
                     visuals.SetActive(false);
                     transform.position = tpPosition.position;
