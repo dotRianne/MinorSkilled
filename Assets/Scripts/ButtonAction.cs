@@ -32,9 +32,18 @@ public class ButtonAction : MonoBehaviour
     private Quaternion endRotation;
 
     // OpenDoor variables
-    [Header("OpenGarage variables")]
+    [Header("OpenDoor variables")]
     [SerializeField] private NPC_Chicken emil;
     private bool doorIsOpen = false;
+
+
+    // OpenDoor variables
+    [Header("ElevatorUp variables")]
+    public float elevatorDuration = 3f;
+    private float elevatorElapsed = 0f;
+    [SerializeField] private int distanceUp = 0;
+    private bool elevatorIsUp = false;
+    private bool elevatorMoving = false;
 
     private void Start()
     {
@@ -77,7 +86,32 @@ public class ButtonAction : MonoBehaviour
                 }
             }
         }
+
+        if (elevatorMoving)
+        {
+            elevatorElapsed += Time.deltaTime;
+            float time = Mathf.Clamp01(elevatorElapsed / elevatorDuration);
+            targetObject.transform.localPosition = Vector3.Lerp(Vector3.zero, new Vector3(0, distanceUp, 0), time);
+            if(elevatorElapsed >= elevatorDuration)
+            {
+                elevatorMoving = false;
+                elevatorIsUp = true;
+                if (lightOff != null && lightOn != null)
+                {
+                    lightOn.SetActive(false);
+                    lightOff.SetActive(true);
+                }
+            }
+        }
     }
+
+    public void ResetElevator()
+    {
+        elevatorElapsed = 0;
+        targetObject.transform.localPosition = Vector3.zero;
+        elevatorIsUp = false;
+    }
+
     private IEnumerator ClearNotif(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
@@ -136,6 +170,26 @@ public class ButtonAction : MonoBehaviour
                     TXT_input.SetText("");
                     playerInside = false;
                     emil.openedDoor = true;
+                }
+                break;
+            case "ElevatorUp":
+                if (elevatorIsUp == true)
+                {
+                    TXT_notif.SetText("The elevator is already up.");
+                    TXT_input.SetText("");
+                    coroutine = ClearNotif(3f);
+                    StartCoroutine(coroutine);
+                    break;
+                }
+                if (targetObject != null)
+                {
+                    elevatorMoving = true;
+                    TXT_input.SetText("");
+                    if (lightOff != null && lightOn != null)
+                    {
+                        lightOff.SetActive(false);
+                        lightOn.SetActive(true);
+                    }
                 }
                 break;
             default:

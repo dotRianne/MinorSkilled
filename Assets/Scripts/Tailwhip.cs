@@ -8,7 +8,7 @@ public class Tailwhip : MonoBehaviour
     [SerializeField] private TMP_Text TXT_input;
     [SerializeField] private AudioSource audioSource;
     private bool isInRange = false;
-    private bool isWhippable = true;
+    public bool isWhippable = true;
 
     [Header("Settings")]
     public bool showText = true;
