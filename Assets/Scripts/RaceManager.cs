@@ -127,6 +127,8 @@ public class RaceManager : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
+            startBlock.gameObject.SetActive(false);
+            endBlock.gameObject.SetActive(false);
             npc.TpToRace();
         }
     }
@@ -146,24 +148,36 @@ public class RaceManager : MonoBehaviour
         startBarrier.SetActive(true);
 
         // Puzzle resets
+        Debug.Log("Resetting puzzle 1.");
         sc1_object.SetActive(true);
         sc1_visuals.SetActive(true);
         sc1_script.isWhippable = true;
+        Debug.Log("Puzzle 3 reset.");
 
+        Debug.Log("Resetting puzzle 2.");
         sc2_object.ResetElevator();
+        Debug.Log("Puzzle 2 reset.");
 
+        Debug.Log("Resetting puzzle 3.");
         sc3_topbox.SetActive(true);
         sc3_visuals.SetActive(true);
         sc3_dragbox.transform.localPosition = sc3_dragboxpos.transform.localPosition;
         sc3_script.isWhippable = true;
+        Debug.Log("Still resetting puzzle 3.");
         sc3_downbox.SetActive(false);
+        Debug.Log("Puzzle 3 reset.");
 
+        Debug.Log("Resetting puzzle 4.");
         sc4_object1.SetActive(true);
         sc4_object2.SetActive(true);
         sc4_script1.isWhippable = true;
         sc4_script2.isWhippable = true;
         sc4_visuals1.SetActive(true);
         sc4_visuals2.SetActive(true);
+        Debug.Log("Puzzle 4 reset.");
+
+        startBlock.gameObject.SetActive(true);
+        endBlock.gameObject.SetActive(true);
     }
 
     private IEnumerator ClearNotif(float waitTime)
