@@ -55,7 +55,7 @@ public class RaceManager : MonoBehaviour
         sc4_script2 = sc4_object2.GetComponent<Tailwhip>();
 
         coroutine = ClearNotif(3f);
-        TXT_goal.SetText(goalTime.ToString() + " seconds.");
+        TXT_goal.SetText("goal: " + goalTime.ToString() + " seconds.");
     }
 
     private void Update()
@@ -89,7 +89,7 @@ public class RaceManager : MonoBehaviour
         if (raceOngoing)
         {
             raceTimer += Time.deltaTime;
-            TXT_timer.SetText(raceTimer.ToString("0") + " seconds.");
+            TXT_timer.SetText("time: " + raceTimer.ToString("0") + " seconds.");
         }
 
         if(endBlock.isInside && raceOngoing)
@@ -108,13 +108,13 @@ public class RaceManager : MonoBehaviour
             raceComplete = true;
             npc.satisfyTask = true;
             TXT_notif.SetText("You win!");
-            TXT_input.SetText("[Q] Return to " + npcInfo);
+            TXT_input.SetText("[Q] Return to " + npcInfo.name);
             StartCoroutine(coroutine);
         }
         if(raceTimer > goalTime)
         {
             TXT_notif.SetText("You Lose... Try again!");
-            TXT_input.SetText("[R] Restart | [Q] Return to Squirrel");
+            TXT_input.SetText("[R] Restart | [Q] Return to " + npcInfo.name);
         }
     }
 
@@ -140,7 +140,7 @@ public class RaceManager : MonoBehaviour
     {
         countdownTimer = 3f;
         raceTimer = 0f;
-        TXT_timer.SetText("0 seconds.");
+        TXT_timer.SetText("time: 0 seconds.");
         raceOngoing = false;
         raceStarting = false;
         startBarrier.SetActive(true);
