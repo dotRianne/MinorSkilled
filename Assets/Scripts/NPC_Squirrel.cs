@@ -14,6 +14,7 @@ public class NPC_Squirrel : MonoBehaviour
     public CharacterController playerCC;
     public GameObject squirrelSpot;
     public GameObject levelStart;
+    public GameObject levelEnd;
     public GameObject levelHUD;
     public GameObject mainHUD;
     public GameObject lightBeam;

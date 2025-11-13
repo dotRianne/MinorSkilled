@@ -127,6 +127,10 @@ public class RaceManager : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
+            if (endBlock.isInside)
+            {
+                npc.player.transform.position = npc.levelEnd.transform.position;
+            }
             startBlock.gameObject.SetActive(false);
             endBlock.gameObject.SetActive(false);
             npc.TpToRace();
