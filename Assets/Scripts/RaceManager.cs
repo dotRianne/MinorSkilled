@@ -18,6 +18,7 @@ public class RaceManager : MonoBehaviour
 
     private float countdownTimer;
     private float raceTimer;
+    private int attempts;
     [SerializeField] private TMP_Text TXT_goal;
     [SerializeField] private TMP_Text TXT_timer;
     [SerializeField] private TMP_Text TXT_input;
@@ -144,6 +145,12 @@ public class RaceManager : MonoBehaviour
 
     public void ResetSettings()
     {
+        if(attempts > 3)
+        {
+            goalTime = 170;
+            TXT_goal.SetText("goal: " + goalTime.ToString() + " seconds.");
+        }
+        attempts += 1;
         countdownTimer = 3f;
         raceTimer = 0f;
         TXT_timer.SetText("time: 0 seconds.");

@@ -1,6 +1,5 @@
 using System.Collections;
 using TMPro;
-using UnityEditor.TerrainTools;
 using UnityEngine;
 
 public class NPC_Chicken : MonoBehaviour
