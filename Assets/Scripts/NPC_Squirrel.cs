@@ -39,28 +39,35 @@ public class NPC_Squirrel : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && playerInRange && !satisfyTask)
+        if (Input.GetKeyDown(KeyCode.E) && playerInRange)
         {
-            switch (talkStep)
+            if (!satisfyTask)
             {
-                case 0:
-                    TXT_notif.SetText("Hey! hey! hey you! do you have what it takes to go fast?");
-                    TXT_input.SetText("[E] Continue talking");
-                    talkStep++;
-                    break;
-                case 1:
-                    TXT_notif.SetText("I just KNOW you can't beat me in a race!");
-                    TXT_input.SetText("[E] Continue talking");
-                    talkStep++;
-                    break;
-                case 2:
-                    TXT_notif.SetText("Want to try me anyways?! Lets go!");
-                    TXT_input.SetText("[E] Agree to race against " + npcInfo.name);
-                    talkStep++;
-                    break;
-                case 3:
-                    TpToRace();
-                    break;
+                switch (talkStep)
+                {
+                    case 0:
+                        TXT_notif.SetText("Hey! You're also going to the party right?");
+                        TXT_input.SetText("[E] Continue talking");
+                        talkStep++;
+                        break;
+                    case 1:
+                        TXT_notif.SetText("I was thinking of hosting a fun little race for people there!");
+                        TXT_input.SetText("[E] Continue talking");
+                        talkStep++;
+                        break;
+                    case 2:
+                        TXT_notif.SetText("Could I get you to test the course for me? See if you can beat my time!");
+                        TXT_input.SetText("[E] Agree to race against " + npcInfo.charName);
+                        talkStep++;
+                        break;
+                    case 3:
+                        TpToRace();
+                        break;
+                }
+            }
+            else if (satisfyTask)
+            {
+                TpToRace();
             }
         }
         if (satisfyTask && !paidTask)

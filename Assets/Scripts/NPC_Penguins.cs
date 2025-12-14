@@ -13,6 +13,7 @@ public class NPC_Penguins : MonoBehaviour
 
     [SerializeField] private GameObject lightBeam;
     [SerializeField] private GameObject reward;
+    [SerializeField] private GameObject rico;
     [SerializeField] private TMP_Text TXT_input;
     [SerializeField] private TMP_Text TXT_notif;
     [SerializeField] private TMP_Text TXT_story;
@@ -20,9 +21,10 @@ public class NPC_Penguins : MonoBehaviour
     private bool satisfyTask = false;
     private bool brokeAllVases = false;
     private bool playerInRange = false;
-    private bool hasTalked = false;
-    private int hasTalkedStep = 0;
     public int brokenVases = 0;
+
+    public int talkStep = 0;
+    public bool talked = false;
 
     private IEnumerator coroutine;
 
@@ -34,58 +36,69 @@ public class NPC_Penguins : MonoBehaviour
     private void Update()
     {
         if (brokenVases >= 8 && !brokeAllVases) brokeAllVases = true;
-        if (hasTalked && playerInRange && !brokeAllVases)
+
+        if(Input.GetKeyDown(KeyCode.E) && playerInRange)
         {
-            if(Input.GetKeyDown(KeyCode.E))
+            if(talkStep > 2)
             {
-                TXT_notif.SetText("Kowalski: There still appear to be some vases, sir.");
-                TXT_input.SetText("");
-            }
-        }
-            if (hasTalked && playerInRange && brokeAllVases && !satisfyTask)
-        {
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                if(hasTalkedStep == 0)
+                if (!brokeAllVases)
                 {
-                    TXT_notif.SetText("Skipper: Kowalski? Analysis!");
-                    TXT_input.SetText("[E] Continue talk");
-                    hasTalkedStep = 1;
-                }
-                else if(hasTalkedStep == 1)
-                {
-                    satisfyTask = true;
-                    collectManager.Increase("bone", 1);
-                    TXT_notif.SetText("Kowalski: Vases destroyed, sir.");
+                    TXT_notif.SetText("Kowalski: There still appear to be some vases, sir.");
                     TXT_input.SetText("");
-                    StartCoroutine(coroutine);
-                    lightBeam.SetActive(false);
-                    reward.SetActive(true);
-                    locationManager.helpedPenguins = true;
+                }
+                else if (brokeAllVases)
+                {
+                    switch (talkStep)
+                    {
+                        case 3:
+                            TXT_notif.SetText("Skipper: Kowalski? Analysis!");
+                            TXT_input.SetText("[E] Continue talk");
+                            talkStep++;
+                            break;
+                        case 4:
+                            TXT_notif.SetText("Kowalski: Vases destroyed, sir.");
+                            TXT_input.SetText("[E] Continue talk");
+                            talkStep++;
+                            break;
+                        case 5:
+                            rico.SetActive(true);
+                            TXT_notif.SetText("Rico: Kaboom?");
+                            TXT_input.SetText("[E] Continue talk");
+                            talkStep++;
+                            break;
+                        case 6:
+                            talked = true;
+                            satisfyTask = true;
+                            TXT_notif.SetText("Skipper: No, Rico.. no kaboom.\nYet...");
+                            TXT_input.SetText("");
+                            StartCoroutine(coroutine);
+                            lightBeam.SetActive(false);
+                            reward.SetActive(true);
+                            locationManager.helpedPenguins = true;
+                            break;
+                    }
                 }
             }
-        }
-        else if (!hasTalked && playerInRange && Input.GetKeyDown(KeyCode.E))
-        {
-            if (hasTalkedStep == 0)
+            else if(talkStep < 3)
             {
-                TXT_notif.SetText("Skipper: Kowalski? Analysis!");
-                TXT_input.SetText("[E] Continue talk");
-                hasTalkedStep = 1;
-            }
-            else if (hasTalkedStep == 1)
-            {
-                TXT_notif.SetText("Kowalski: These vases are in the way, sir.");
-                TXT_input.SetText("[E] Continue talk");
-                hasTalkedStep = 2;
-            }
-            else if (hasTalkedStep == 2)
-            {
-                TXT_notif.SetText("Skipper: Then we must get rid of them!");
-                TXT_input.SetText("");
-                hasTalked = true;
-                hasTalkedStep = 0;
-                StartCoroutine(coroutine);
+                switch (talkStep)
+                {
+                    case 0:
+                        TXT_notif.SetText("Skipper: Kowalski? Analysis!");
+                        TXT_input.SetText("[E] Continue talk");
+                        talkStep++;
+                        break;
+                    case 1:
+                        TXT_notif.SetText("Kowalski: These vases appear quite suspicous, sir.");
+                        TXT_input.SetText("[E] Continue talk");
+                        talkStep++;
+                        break;
+                    case 2:
+                        TXT_notif.SetText("Skipper: Then we must get apprehend them!");
+                        TXT_input.SetText("");
+                        talkStep++;
+                        break;
+                }
             }
         }
     }
@@ -95,7 +108,7 @@ public class NPC_Penguins : MonoBehaviour
         if (other.gameObject.tag == "Player" && !satisfyTask)
         {
             playerInRange = true;
-            TXT_input.SetText("[E] Talk to " + npcInfo.charName);
+            if(!talked) TXT_input.SetText("[E] Talk to " + npcInfo.charName);
         }
     }
     private void OnTriggerExit(Collider other)

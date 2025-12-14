@@ -18,6 +18,9 @@ public class NPC_Jake : MonoBehaviour
     private bool playerInRange = false;
     public bool scoredGoal = false;
 
+    private int talkStep = 0;
+    public bool talked = false;
+
     private IEnumerator coroutine;
 
     private void Start()
@@ -27,26 +30,40 @@ public class NPC_Jake : MonoBehaviour
 
     private void Update()
     {
-        if (playerInRange && scoredGoal && !satisfyTask)
+        if (Input.GetKeyDown(KeyCode.E) && !scoredGoal && !satisfyTask)
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            if (playerInRange)
             {
-                satisfyTask = true;
-                locationManager.helpedFox = true;
-                TXT_notif.SetText("Wow that was amazing! Here, have this!");
-                TXT_input.SetText("");
-                lightBeam.SetActive(false);
-                reward.SetActive(true);
-                StartCoroutine(coroutine);
+                talked = true;
+                switch (talkStep)
+                {
+                    case 0:
+                        TXT_notif.SetText("Do you want to play football with me?");
+                        TXT_input.SetText("[E] Continue talking");
+                        talkStep++;
+                        break;
+                    case 1:
+                        TXT_notif.SetText("Try scoring against me!");
+                        TXT_input.SetText("[E] Challenge " + npcInfo.charName + "!");
+                        talkStep++;
+                        break;
+                    case 2:
+                        TXT_notif.SetText("");
+                        TXT_input.SetText("");
+                        talkStep++;
+                        break;
+                }
             }
         }
-        else if (playerInRange && !scoredGoal && !satisfyTask)
+        else if(Input.GetKeyDown(KeyCode.E) && scoredGoal && !satisfyTask && playerInRange)
         {
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                TXT_notif.SetText("Can you score against me? I'll give you a reward!");
-                StartCoroutine(coroutine);
-            }
+            talked = true;
+            satisfyTask = true;
+            locationManager.helpedFox = true;
+            TXT_notif.SetText("You got skills! Lets play again soon!");
+            TXT_input.SetText("");
+            lightBeam.SetActive(false);
+            reward.SetActive(true);
         }
     }
 
@@ -55,15 +72,19 @@ public class NPC_Jake : MonoBehaviour
         if (other.gameObject.tag == "Player" && !satisfyTask)
         {
             playerInRange = true;
-            TXT_input.SetText("[E] Talk to " + npcInfo.charName);
+            if (!talked)
+            {
+                TXT_input.SetText("[E] Talk to " + npcInfo.charName);
+            }
         }
     }
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.tag == "Player")
         {
-            playerInRange = true;
+            playerInRange = false;
             TXT_input.SetText("");
+            TXT_notif.SetText("");
         }
     }
 

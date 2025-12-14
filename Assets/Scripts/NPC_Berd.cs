@@ -26,6 +26,7 @@ public class NPC_Berd : MonoBehaviour
     public bool satisfyTask = false;
     private bool playerInRange = false;
     private int talkStep = 0;
+    public bool talked = false;
 
     private IEnumerator coroutine;
 
@@ -36,25 +37,41 @@ public class NPC_Berd : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && playerInRange && !satisfyTask) 
+        if (Input.GetKeyDown(KeyCode.E) && playerInRange) 
         {
-            if(talkStep == 0)
+            talked = true;
+            if (!satisfyTask)
             {
-                TXT_notif.SetText("I need your help! Can you help find my marbles?");
-                TXT_input.SetText("[E] Agree to help " + npcInfo.charName);
-                talkStep++;
+                switch (talkStep)
+                {
+                    case 0:
+                        TXT_notif.SetText("Help! I've lost all my marbles in the warehouse..");
+                        TXT_input.SetText("[E] Continue talking");
+                        talkStep++;
+                        break;
+                    case 1:
+                        TXT_notif.SetText("Could you help me find them back?");
+                        TXT_input.SetText("[E] Continue talking");
+                        talkStep++;
+                        break;
+                    case 2:
+                        TXT_notif.SetText("I can show you were I last saw them?");
+                        TXT_input.SetText("[E] Agree to help " + npcInfo.charName);
+                        talkStep++;
+                        break;
+                    case 3:
+                        TpToWarehouse();
+                        talkStep--;
+                        break;
+                }
             }
-            else if (talkStep == 1)
+            else if (satisfyTask && !paidTask)
             {
-                TpToWarehouse();
+                paidTask = true;
+                reward.SetActive(true);
+                lightBeam.SetActive(false);
+                locationManager.helpedDog = true;
             }
-        } 
-        if(satisfyTask && !paidTask)
-        {
-            paidTask = true;
-            reward.SetActive(true);
-            lightBeam.SetActive(false);
-            locationManager.helpedDog = true;
         }
     }
 
@@ -63,11 +80,12 @@ public class NPC_Berd : MonoBehaviour
         if (other.gameObject.tag == "Player" && !satisfyTask)
         {
             playerInRange = true;
-            TXT_input.SetText("[E] Talk to " + npcInfo.charName);
+            if(!talked) TXT_input.SetText("[E] Talk to " + npcInfo.charName);
         }
         else if (other.gameObject.tag == "Player" && satisfyTask)
         {
-            TXT_notif.SetText("Thanks for returning my marbles!");
+            playerInRange = true;
+            TXT_notif.SetText("Now I can play with them at the party!");
         }
     }
     private void OnTriggerExit(Collider other)
@@ -91,6 +109,7 @@ public class NPC_Berd : MonoBehaviour
         // Toggle HUDs
         mainHUD.SetActive(false);
         warehouseHUD.SetActive(true);
+        playerInRange = false;
     }
 
     private IEnumerator ClearNotif(float waitTime)

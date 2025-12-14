@@ -9,7 +9,7 @@ public class NPC_Stag : MonoBehaviour
     public WorldLocation locationManager;
     public NPCinfo npcInfo;
 
-    [SerializeField] private int itemsNeeded = 5;
+    [SerializeField] private int itemsNeeded = 4;
     [SerializeField] private GameObject lightBeam;
     [SerializeField] private GameObject reward;
     [SerializeField] private TMP_Text TXT_input;
@@ -19,7 +19,9 @@ public class NPC_Stag : MonoBehaviour
     private bool satisfyTask = false;
     private bool hasRewarded = false;
     private bool playerInRange = false;
-    private bool hasTalked = false; // first time talk prompt
+
+    private int talkStep = 0;
+    private bool talked = false;
 
     private IEnumerator coroutine;
 
@@ -30,38 +32,45 @@ public class NPC_Stag : MonoBehaviour
 
     private void Update()
     {
-        if (hasTalked && playerInRange && !hasRewarded)
+        if (Input.GetKeyDown(KeyCode.E) && !hasRewarded && !satisfyTask && playerInRange)
         {
-            if (collectManager.collectedGems >= itemsNeeded)
+            switch (talkStep)
             {
-                if (Input.GetKeyDown(KeyCode.E))
-                {
-                    satisfyTask = true;
-                    hasRewarded = true;
-                    collectManager.Decrease("gem", itemsNeeded);
-                    TXT_notif.SetText("Yippee! I love my gems!");
-                    TXT_input.SetText("");
-                    StartCoroutine(coroutine);
-                    lightBeam.SetActive(false);
-                    reward.SetActive(true);
-                    locationManager.helpedDeer = true;
-                }
+                case 0:
+                    TXT_notif.SetText("I want to get something matching for my friends");
+                    TXT_input.SetText("[E] Continue talking");
+                    talkStep++;
+                    break;
+                case 1:
+                    TXT_notif.SetText("I was thinking something subtle but unique. like gems!");
+                    TXT_input.SetText("[E] Continue talking");
+                    talkStep++;
+                    break;
+                case 2:
+                    TXT_notif.SetText("Could you help me find " + itemsNeeded + " gems?");
+                    TXT_input.SetText("[E] Agree to help " + npcInfo.charName);
+                    talkStep++;
+                    break;
+                case 3:
+                    if (collectManager.collectedGems < itemsNeeded)
+                    {
+                        TXT_notif.SetText("Did you get " + itemsNeeded + " gems?");
+                    }
+                    else
+                    {
+                        talked = true;
+                        satisfyTask = true;
+                        hasRewarded = true;
+                        collectManager.Decrease("gem", itemsNeeded);
+                        TXT_notif.SetText("Thanks. My friends will love these.");
+                        TXT_input.SetText("");
+                        StartCoroutine(coroutine);
+                        lightBeam.SetActive(false);
+                        reward.SetActive(true);
+                        locationManager.helpedDeer = true;
+                    }
+                    break;
             }
-            else if (collectManager.collectedGems < itemsNeeded)
-            {
-                if (Input.GetKeyDown(KeyCode.E))
-                {
-                    TXT_notif.SetText("Did you get the " + itemsNeeded + " gems yet?");
-                    StartCoroutine(coroutine);
-                }
-            }
-        }
-        else if (!hasTalked && playerInRange && Input.GetKeyDown(KeyCode.E))
-        {
-            TXT_notif.SetText("I love collecting gems! Please bring me " + itemsNeeded + " gems.");
-            hasTalked = true;
-            StartCoroutine(coroutine);
-
         }
     }
 
@@ -70,7 +79,7 @@ public class NPC_Stag : MonoBehaviour
         if(other.gameObject.tag == "Player" && !satisfyTask)
         {
             playerInRange = true;
-            TXT_input.SetText("[E] Talk to " + npcInfo.charName);
+            if(!talked) TXT_input.SetText("[E] Talk to " + npcInfo.charName);
         }
     }
     private void OnTriggerExit(Collider other)
@@ -79,6 +88,7 @@ public class NPC_Stag : MonoBehaviour
         {
             playerInRange = false;
             TXT_input.SetText("");
+            TXT_notif.SetText("");
         }
     }
 

@@ -2,11 +2,18 @@ using TMPro;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Unity.VisualScripting;
 
 public class WorldLocation : MonoBehaviour
 {
+    [SerializeField] private GameObject input_bg;
+    [SerializeField] private GameObject notif_bg;
+    [SerializeField] private GameObject extra_bg;
+
     [SerializeField] private TMP_Text TXT_notif;
     [SerializeField] private TMP_Text TXT_story;
+    [SerializeField] private TMP_Text TXT_extra;
+    [SerializeField] private TMP_Text TXT_input;
     [SerializeField] private GameObject prestory1;
     [SerializeField] private GameObject prestory2;
     [SerializeField] private CollectiblesManager collectManager;
@@ -15,9 +22,13 @@ public class WorldLocation : MonoBehaviour
     private IEnumerator coroutine;
 
     [Header("Story")]
-    [SerializeField] private int storyStep = -1;
     private bool pregameScreen1 = true;
     private bool pregameScreen2 = true;
+
+    public bool atParty = false;
+    private bool setupParty = false;
+    [SerializeField] private GameObject worldAnimals;
+    [SerializeField] private GameObject partyAnimals;
 
     [HideInInspector] public bool helpedFox;
     [HideInInspector] public bool helpedDuck;
@@ -43,7 +54,6 @@ public class WorldLocation : MonoBehaviour
     [Header("Construction")]
     [SerializeField] private bool helpedAllConstruction = false;
     [SerializeField] private GameObject constructionWall;
-    public int constructionMinimumBones;
 
     private void Start()
     {
@@ -52,7 +62,25 @@ public class WorldLocation : MonoBehaviour
 
     private void Update()
     {
-        if(pregameScreen1 && Input.GetMouseButtonDown(0))
+        if(atParty && !setupParty)
+        {
+            setupParty = true;
+            worldAnimals.SetActive(false);
+            partyAnimals.SetActive(true);
+        }
+
+
+        if (TXT_extra.text == "" && extra_bg.activeSelf == true) extra_bg.SetActive(false);
+        else if (TXT_extra.text != "" && extra_bg.activeSelf == false) extra_bg.SetActive(true);
+
+        if (TXT_input.text == "" && input_bg.activeSelf == true) input_bg.SetActive(false);
+        else if (TXT_input.text != "" && input_bg.activeSelf == false) input_bg.SetActive(true);
+
+        if (TXT_notif.text == "" && notif_bg.activeSelf == true) notif_bg.SetActive(false);
+        else if (TXT_notif.text != "" && notif_bg.activeSelf == false) notif_bg.SetActive(true);
+
+
+        if (pregameScreen1 && Input.GetMouseButtonDown(0))
         {
             pregameScreen1 = false;
             prestory1.SetActive(false);
@@ -63,17 +91,17 @@ public class WorldLocation : MonoBehaviour
             pregameScreen2 = false;
             prestory2.SetActive(false);
         }
-        if(helpedDog && helpedAlpaca && helpedPenguins && helpedWolf && !helpedAllMarket && collectManager.collectedBones >= marketMinimumBones)
+        if(helpedDog && helpedAlpaca && helpedPenguins && helpedWolf && !helpedAllMarket)
         {
             helpedAllMarket = true;
             marketWall.SetActive(false);
         }
-        if (helpedDeer && helpedDuck && helpedFox && !helpedAllStreets && collectManager.collectedBones >= streetsMinimumBone)
+        if (helpedDeer && helpedDuck && helpedFox && !helpedAllStreets)
         {
             helpedAllStreets = true;
             streetsWall.SetActive(false);
         }
-        if (helpedBird && helpedChicken && helpedFish && helpedSquirrel && !helpedAllConstruction && collectManager.collectedBones >= constructionMinimumBones)
+        if (helpedBird && helpedChicken && helpedFish && helpedSquirrel && !helpedAllConstruction)
         {
             helpedAllConstruction = true;
             constructionWall.SetActive(false);
@@ -95,40 +123,5 @@ public class WorldLocation : MonoBehaviour
     {
         yield return new WaitForSeconds(waitTime);
         TXT_notif.SetText("");
-    }
-
-    public void StepInStory(int step)
-    {
-        if (step > storyStep)
-        {
-            storyStep = step;
-            SpeakStory();
-        }
-        else Debug.Log("Step " + step + " is behind the current step. The current step is " + storyStep + ".");
-    }
-
-    public void SpeakStory()
-    {
-        switch (storyStep)
-        {
-            case 1:
-                TXT_story.SetText("Escape the garage.");
-                break;
-            case 2:
-                TXT_story.SetText("Escape the garden.");
-                break;
-            case 3:
-                TXT_story.SetText("Head to the market.");
-                break;
-            case 4:
-                TXT_story.SetText("Head to the construction site.");
-                break;
-            case 5:
-                TXT_story.SetText("Head to the Animal Sanctuary.");
-                break;
-            case 6:
-                TXT_story.SetText("Head up to the bird.");
-                break;
-        }
     }
 }

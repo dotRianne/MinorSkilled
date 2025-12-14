@@ -45,13 +45,27 @@ public class CollectionManager : MonoBehaviour
         switch (puzzleName)
         {
             case "tennisballs":
-                if (kwek != null) kwek.satisfyTask = true;
-                break;
+                if (kwek != null)
+                {
+                    kwek.satisfyTask = true;
+                    kwek.talked = false;
+                }
+                    break;
             case "groceries":
-                if (floris != null) floris.satisfyTask = true;
+                if (floris != null)
+                {
+                    floris.satisfyTask = true;
+                    floris.talked = false;
+                    floris.stripes.SetActive(true);
+                }
                 break;
             case "wolf":
-                if (bobo != null) bobo.satisfyTask = true;
+                if (bobo != null)
+                {
+                    bobo.satisfyTask = true;
+                    bobo.talked = false;
+                }
+                bobo.satisfyTask = true;
                 break;
             case "bird":
                 if (pablo != null) pablo.satisfyTask = true;

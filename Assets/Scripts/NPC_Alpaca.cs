@@ -13,11 +13,14 @@ public class NPC_Alpaca : MonoBehaviour
     [SerializeField] private TMP_Text TXT_story;
     [SerializeField] private GameObject lightBeam;
     [SerializeField] private GameObject reward;
+    public GameObject stripes;
 
     [HideInInspector] public bool satisfyTask = false;
     [HideInInspector] public bool paidReward = false;
     private bool playerInRange = false;
-    private bool hasTalked = false;
+
+    private int talkStep = 0;
+    public bool talked = false;
 
     private IEnumerator coroutine;
 
@@ -28,12 +31,49 @@ public class NPC_Alpaca : MonoBehaviour
 
     private void Update()
     {
-        if (hasTalked && playerInRange && Input.GetKeyDown(KeyCode.E) && !paidReward)
+        if(Input.GetKeyDown(KeyCode.E) && !paidReward && playerInRange)
         {
-            if (satisfyTask)
+            talked = true;
+            if (!satisfyTask)
             {
+                switch (talkStep)
+                {
+                    case 0:
+                        TXT_notif.SetText("That stupid dog...");
+                        TXT_input.SetText("[E] Talk to " + npcInfo.charName);
+                        talkStep++;
+                        break;
+                    case 1:
+                        TXT_notif.SetText("Oh.. sorry... Its just..\nHe eats so much!!");
+                        TXT_input.SetText("[E] Continue talking");
+                        talkStep++;
+                        break;
+                    case 2:
+                        TXT_notif.SetText("I need to get more cooking supplies.. for the party!!!");
+                        TXT_input.SetText("[E] Continue talking");
+                        talkStep++;
+                        break;
+                    case 3:
+                        TXT_notif.SetText("Could you help me get them?");
+                        TXT_input.SetText("[E] Agree to help " + npcInfo.charName);
+                        talkStep++;
+                        break;
+                    case 4:
+                        TXT_notif.SetText("Make sure to place them in the box to the left!");
+                        TXT_input.SetText("");
+                        talkStep++;
+                        break;
+                    case 5:
+                        TXT_notif.SetText("We're still missing some stuff.");
+                        TXT_input.SetText("");
+                        break;
+                }
+            }
+            else if (satisfyTask)
+            {
+                talked = true;
                 paidReward = true;
-                TXT_notif.SetText("Thanks! Have this for the effort.");
+                TXT_notif.SetText("Thanks. Now to hope he doesnt ruin this too...");
                 TXT_input.SetText("");
                 StopCoroutine(coroutine);
                 StartCoroutine(coroutine);
@@ -41,20 +81,6 @@ public class NPC_Alpaca : MonoBehaviour
                 reward.SetActive(true);
                 locationManager.helpedAlpaca = true;
             }
-            else if (!satisfyTask)
-            {
-                TXT_notif.SetText("You're still missing some stuff. Make sure its in the crate!");
-                StopCoroutine(coroutine);
-                StartCoroutine(coroutine);
-            }
-            else Debug.Log("We got past all options somehow. check code for errors.");
-        }
-        else if (!hasTalked && playerInRange && Input.GetKeyDown(KeyCode.E))
-        {
-            hasTalked = true;
-            StopCoroutine(coroutine);
-            StartCoroutine(coroutine);
-            TXT_notif.SetText("Could you help me get my groceries in the crate?");
         }
     }
 
@@ -63,7 +89,7 @@ public class NPC_Alpaca : MonoBehaviour
         if (other.gameObject.tag == "Player" && !paidReward)
         {
             playerInRange = true;
-            TXT_input.SetText("[E] Talk to " + npcInfo.charName);
+            if(!talked) TXT_input.SetText("[E] Talk to " + npcInfo.charName);
         }
     }
     private void OnTriggerExit(Collider other)
@@ -72,6 +98,7 @@ public class NPC_Alpaca : MonoBehaviour
         {
             playerInRange = false;
             TXT_input.SetText("");
+            TXT_notif.SetText("");
         }
     }
 

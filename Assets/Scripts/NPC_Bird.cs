@@ -32,6 +32,7 @@ public class NPC_Bird : MonoBehaviour
             if (satisfyTask)
             {
                 paidReward = true;
+                locationManager.helpedBird = true;
                 lightBeam.SetActive(false);
                 TXT_notif.SetText("Cool, thanks. I won't snitch on you no more.");
                 StartCoroutine(coroutine);
@@ -41,29 +42,32 @@ public class NPC_Bird : MonoBehaviour
                 switch (talkStep)
                 {
                     case 0:
-                        TXT_notif.SetText("I saw you destroying some vases earlier.");
+                        TXT_notif.SetText("I saw you with those penguins earlier..");
                         TXT_input.SetText("[E] Continue talking");
                         talkStep++;
                         break;
                     case 1:
-                        TXT_notif.SetText("I just so happen to know who's those were..");
+                        TXT_notif.SetText("You broke them all!\nMy friend made those vases you know!");
+                        TXT_input.SetText("[E] Continue talking");
                         talkStep++;
                         break;
                     case 2:
-                        TXT_notif.SetText("And he won't like hearing you destroyed his favorite one..");
+                        TXT_notif.SetText("You're going to do something for me to make up for this.");
+                        TXT_input.SetText("[E] Continue talking");
                         talkStep++;
                         break;
                     case 3:
-                        TXT_notif.SetText("But.. I won't tell on you if you if you do something for me.");
+                        TXT_notif.SetText("I need you to find something for me..\nI lost my feed somewhere in this building.");
+                        TXT_input.SetText("[E] Continue talking");
                         talkStep++;
                         break;
                     case 4:
-                        TXT_notif.SetText("I've lost my feed, find it and I'll keep quiet.");
+                        TXT_notif.SetText("Retreive it for me and I'll consider you forgiven.");
                         TXT_input.SetText("");
                         talkStep++;
                         break;
                     case 5:
-                        TXT_notif.SetText("If you don't get me this feed I will tell him!");
+                        TXT_notif.SetText("I'll make you regret it if you don't do as I say!");
                         TXT_input.SetText("");
                         StartCoroutine(coroutine);
                         break;
@@ -72,7 +76,7 @@ public class NPC_Bird : MonoBehaviour
         }
         else if (playerInRange && paidReward && Input.GetKeyDown(KeyCode.E))
         {
-            TXT_notif.SetText("Go on, leave me be. Or I may change my mind.");
+            TXT_notif.SetText("Good job. Now, leave me be.\nmay we meet again in a friendlier setting.");
             TXT_input.SetText("");
             StartCoroutine(coroutine);
         }

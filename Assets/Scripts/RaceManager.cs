@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class RaceManager : MonoBehaviour
 {
@@ -17,7 +18,11 @@ public class RaceManager : MonoBehaviour
     public bool atRaceArea;
 
     private float countdownTimer;
+    private float currentGoalTime;
     private float raceTimer;
+
+    private float playerPB;
+
     private int attempts;
     [SerializeField] private TMP_Text TXT_goal;
     [SerializeField] private TMP_Text TXT_timer;
@@ -50,13 +55,16 @@ public class RaceManager : MonoBehaviour
 
     private void Start()
     {
+        currentGoalTime = goalTime;
         sc1_script = sc1_object.GetComponent<Tailwhip>();
         sc3_script = sc3_topbox.GetComponent<Tailwhip>();
         sc4_script1 = sc4_object1.GetComponent<Tailwhip>();
         sc4_script2 = sc4_object2.GetComponent<Tailwhip>();
 
         coroutine = ClearNotif(3f);
-        TXT_goal.SetText("goal: " + goalTime.ToString() + " seconds.");
+        TXT_goal.SetText("goal: " + currentGoalTime.ToString());
+
+        //playerPB = PlayerPrefs.GetFloat("playerBest", 0f);
     }
 
     private void Update()
@@ -90,7 +98,7 @@ public class RaceManager : MonoBehaviour
         if (raceOngoing)
         {
             raceTimer += Time.deltaTime;
-            TXT_timer.SetText("time: " + raceTimer.ToString("0") + " seconds.");
+            TXT_timer.SetText("time: " + raceTimer.ToString("0"));
         }
 
         if(endBlock.isInside && raceOngoing)
@@ -104,16 +112,43 @@ public class RaceManager : MonoBehaviour
 
     private void CheckResults()
     {
-        if(raceTimer <= goalTime)
+        if (raceTimer < playerPB)
         {
+            PlayerPrefs.SetFloat("playerBest", raceTimer);
+            PlayerPrefs.Save();
+        }
+
+        if(raceTimer <= currentGoalTime)
+        {
+            if (raceTimer <= 100f) currentGoalTime = raceTimer-1;
+            else if (raceTimer > 100f && raceTimer <= 110f) currentGoalTime = 100f;
+            else if (raceTimer > 110f && raceTimer <= 120f) currentGoalTime = 110f;
+            else if (raceTimer > 120f && raceTimer <= 130f) currentGoalTime = 120f;
+            else if (raceTimer > 130f && raceTimer <= 140f) currentGoalTime = 130f;
+            else if (raceTimer > 140f && raceTimer <= 150f) currentGoalTime = 140f;
+
             raceComplete = true;
             npc.satisfyTask = true;
             TXT_notif.SetText("You win!");
             TXT_input.SetText("[Q] Return to " + npcInfo.name);
             StartCoroutine(coroutine);
         }
-        if(raceTimer > goalTime)
+        else if(raceTimer > currentGoalTime)
         {
+            if(attempts >= 2)
+            {
+                if (raceTimer <= 160f) { }
+                if (raceTimer > 160f && raceTimer <= 170f) currentGoalTime = 160f;
+                else if (raceTimer > 170f && raceTimer <= 180f) currentGoalTime = 170f;
+                else if (raceTimer > 180f && raceTimer <= 190f) currentGoalTime = 180f;
+                else if (raceTimer > 190f && raceTimer <= 200f) currentGoalTime = 190f;
+                else if (raceTimer > 200f && raceTimer <= 210f) currentGoalTime = 200f;
+                else if (raceTimer > 210f && raceTimer <= 220f) currentGoalTime = 210f;
+                else if (raceTimer > 220f && raceTimer <= 230f) currentGoalTime = 220f;
+                else if (raceTimer > 230f && raceTimer <= 240f) currentGoalTime = 230f;
+                else if (raceTimer > 240f && raceTimer <= 250f) currentGoalTime = 240f;
+                else if (raceTimer > 250f) currentGoalTime = 250f;
+            }
             TXT_notif.SetText("You Lose... Try again!");
             TXT_input.SetText("[R] Restart | [Q] Return to " + npcInfo.name);
         }
@@ -125,6 +160,7 @@ public class RaceManager : MonoBehaviour
         {
             npc.TpToSquirrel();
             atRaceArea = false;
+            TXT_extra.SetText("");
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
@@ -145,15 +181,11 @@ public class RaceManager : MonoBehaviour
 
     public void ResetSettings()
     {
-        if(attempts > 3)
-        {
-            goalTime = 170;
-            TXT_goal.SetText("goal: " + goalTime.ToString() + " seconds.");
-        }
         attempts += 1;
+        TXT_goal.SetText("goal: " + currentGoalTime.ToString());
         countdownTimer = 3f;
         raceTimer = 0f;
-        TXT_timer.SetText("time: 0 seconds.");
+        TXT_timer.SetText("time: 0");
         raceOngoing = false;
         raceStarting = false;
         startBarrier.SetActive(true);
@@ -163,7 +195,7 @@ public class RaceManager : MonoBehaviour
         sc1_object.SetActive(true);
         sc1_visuals.SetActive(true);
         sc1_script.isWhippable = true;
-        Debug.Log("Puzzle 3 reset.");
+        Debug.Log("Puzzle 1 reset.");
 
         Debug.Log("Resetting puzzle 2.");
         sc2_object.ResetElevator();
@@ -174,7 +206,6 @@ public class RaceManager : MonoBehaviour
         sc3_visuals.SetActive(true);
         sc3_dragbox.transform.localPosition = sc3_dragboxpos.transform.localPosition;
         sc3_script.isWhippable = true;
-        Debug.Log("Still resetting puzzle 3.");
         sc3_downbox.SetActive(false);
         Debug.Log("Puzzle 3 reset.");
 

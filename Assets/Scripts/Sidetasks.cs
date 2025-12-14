@@ -22,6 +22,7 @@ public class Sidetasks : MonoBehaviour
         {
             scoredAGoal = true;
             npcJake.scoredGoal = true;
+            npcJake.talked = false;
             TXT_notif.SetText("Goal!");
             coroutine = ClearNotif(2f);
         }

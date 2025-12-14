@@ -39,7 +39,6 @@ public class AreaNotifier : MonoBehaviour
             }
             if (!sentStory && storyBox)
             {
-                manager.StepInStory(storyPart);
                 sentStory = true;
             }
         }

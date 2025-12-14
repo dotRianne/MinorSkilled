@@ -40,10 +40,11 @@ public class LeaveWarehouse : MonoBehaviour
         if(isInRange && Input.GetKeyDown(KeyCode.E))
         {
             clear = ClearNotif(3f);
-            if (manager.collectedMarbles >= 18)
+            if (manager.collectedMarbles >= 19)
             {
                 TXT_notif.SetText("You left the warehouse.");
                 berd.satisfyTask = true;
+                berd.talked = false;
 
                 // Teleport player
                 playerCC.enabled = false;
@@ -61,6 +62,7 @@ public class LeaveWarehouse : MonoBehaviour
             }
             else if (manager.collectedMarbles < 18)
             {
+                berd.talked = false;
                 if (msgState == 0)
                 {
                     TXT_notif.SetText("You haven't collected enough marbles. Are you sure you want to leave?");
