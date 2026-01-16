@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using System.Collections;
+using System.Runtime.CompilerServices;
 
 public class EnterParty : MonoBehaviour
 {
@@ -8,9 +9,9 @@ public class EnterParty : MonoBehaviour
     [SerializeField] private TMP_Text TXT_notif;
     [SerializeField] private TMP_Text TXT_extra;
     [SerializeField] private TMP_Text TXT_PartyTime;
-
+    [SerializeField] private GameObject partyHUD;
     // Setting Toggles
-    [SerializeField] private GameObject worldNPCs;
+    [SerializeField] private GameObject worldNPCs; 
     [SerializeField] private GameObject parkNPCs;
     [SerializeField] private GameObject daylight;
     [SerializeField] private GameObject evelight;
@@ -23,6 +24,7 @@ public class EnterParty : MonoBehaviour
     [SerializeField] private GameObject Ending_TimeUp; // 5 minute timer ran out. You get a message that the party ended, people went home and you are left with the mess.
     [SerializeField] private GameObject Ending_Mafia; // You joined the mafia and escaped the police. You guys left the party and left others with the mess.
     [SerializeField] private GameObject Ending_Police; // You helped the police infiltrate and take down the mafia. You went back to the station and left the others with the mess.
+    public string ending = "";
 
     /// <summary> How to perform actions
     /// How to help the police:
@@ -57,11 +59,11 @@ public class EnterParty : MonoBehaviour
     public float partyTime = 20;
 
     [Header("Game State Booleans")]
-    public bool foundGem = false;
     public bool joinedMafia = false;
     public bool acceptPolice = false;
     public bool helpedPolice = false;
     public bool completedSquirrel = false;
+    public bool completedChicken = false;
     public bool outOfTime = false;
     public bool playedEndCredits = false;
 
@@ -88,6 +90,7 @@ public class EnterParty : MonoBehaviour
                 daylight.SetActive(false);
                 evelight.SetActive(true);
                 blackscreen.SetActive(true);
+                partyHUD.SetActive(true);
 
                 cc.enabled = false;
                 player.transform.position = tpSpot.transform.position;
@@ -103,13 +106,15 @@ public class EnterParty : MonoBehaviour
     {
         yield return new WaitForSeconds(waitTime);
         TXT_notif.SetText("");
+        TXT_extra.SetText("");
         if (blackscreen.activeSelf) blackscreen.SetActive(false);
         if (invisWalls.activeSelf) invisWalls.SetActive(false);
     }
 
     private void Update()
     {
-        if (helpedPolice)
+
+        if(ending == "police" || ending == "mafia")
         {
             partyTime = 0;
             outOfTime = true;
@@ -133,38 +138,12 @@ public class EnterParty : MonoBehaviour
             RunCredits();
         }
     }
-    public void SpecialGem()
-    {
-        foundGem = true;
-        TXT_notif.SetText("You picked up a gem that appears different.");
-        StartCoroutine(coroutine);
-    }
-
-    public void AgreeToHelpPolice()
-    {
-        acceptPolice = true;
-        if (joinedMafia) TXT_notif.SetText("Talk to Jeff to gather information.");
-        else TXT_notif.SetText("Find a way to infiltrate the mafia.");
-    }
-
-    public void JoinTheMafia()
-    {
-        joinedMafia = true;
-        if (acceptPolice) TXT_notif.SetText("FBI, OPEN UP!");
-        else TXT_notif.SetText("Welcome to the mafia, bud.");
-    }
-
-    public void CatchTheMafia()
-    {
-        helpedPolice = true;
-        RunCredits();
-    }
 
     public void RunCredits()
     {
         playedEndCredits = true;
-        if (!joinedMafia && !helpedPolice) Ending_TimeUp.SetActive(true);
-        else if (joinedMafia && !helpedPolice) Ending_Mafia.SetActive(true);
-        else if (helpedPolice) Ending_Police.SetActive(true);
+        if (ending == "police") Ending_Police.SetActive(true);
+        else if (ending == "mafia") Ending_Mafia.SetActive(true);
+        else Ending_TimeUp.SetActive(true);
     }
 }

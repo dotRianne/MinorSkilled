@@ -10,6 +10,9 @@ public class WorldLocation : MonoBehaviour
     [SerializeField] private GameObject notif_bg;
     [SerializeField] private GameObject extra_bg;
 
+    [SerializeField] private AudioSource musicSource;
+    //[SerializeField] private AudioClip musicClip;
+
     [SerializeField] private TMP_Text TXT_notif;
     [SerializeField] private TMP_Text TXT_story;
     [SerializeField] private TMP_Text TXT_extra;
@@ -58,6 +61,8 @@ public class WorldLocation : MonoBehaviour
     private void Start()
     {
         prestory1.SetActive(true);
+        musicSource.loop = true;
+        musicSource.Play();
     }
 
     private void Update()
@@ -83,13 +88,8 @@ public class WorldLocation : MonoBehaviour
         if (pregameScreen1 && Input.GetMouseButtonDown(0))
         {
             pregameScreen1 = false;
+            pregameScreen1 = true;
             prestory1.SetActive(false);
-            prestory2.SetActive(true);
-        }
-        else if(pregameScreen2 && Input.GetMouseButtonDown(0))
-        {
-            pregameScreen2 = false;
-            prestory2.SetActive(false);
         }
         if(helpedDog && helpedAlpaca && helpedPenguins && helpedWolf && !helpedAllMarket)
         {

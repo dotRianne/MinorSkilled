@@ -1,17 +1,16 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Playables;
 
 public class CollectiblesManager : MonoBehaviour
 {
     [SerializeField] private TMP_Text TXT_notif;
     [SerializeField] private TMP_Text TXT_gems;
-    [SerializeField] private TMP_Text TXT_bones;
+    [SerializeField] private TMP_Text TXT_tokens;
     [SerializeField] private TMP_Text TXT_marbles;
 
     public int collectedGems;
-    public int collectedBones;
+    public int collecedTokens;
     public int collectedMarbles;
 
     private IEnumerator clear;
@@ -28,10 +27,10 @@ public class CollectiblesManager : MonoBehaviour
                 StopCoroutine(clear);
                 StartCoroutine(clear);
                 break;
-            case "bone":
-                collectedBones += amount;
-                TXT_notif.SetText("You collected a bone!");
-                TXT_bones.SetText(collectedBones.ToString() + " bones");
+            case "token":
+                collecedTokens += amount;
+                TXT_notif.SetText("You collected a token!");
+                TXT_tokens.SetText(collecedTokens.ToString() + " tokens");
                 StopCoroutine(clear);
                 StartCoroutine(clear);
                 break;
@@ -52,9 +51,9 @@ public class CollectiblesManager : MonoBehaviour
                 collectedGems -= amount;
                 TXT_gems.SetText(collectedGems.ToString() + " gems");
                 break;
-            case "bone":
-                collectedBones -= amount;
-                TXT_bones.SetText(collectedBones.ToString() + " bones");
+            case "token":
+                collecedTokens -= amount;
+                TXT_tokens.SetText(collecedTokens.ToString() + " tokens");
                 break;
             case "marbles":
                 collectedMarbles -= amount;
