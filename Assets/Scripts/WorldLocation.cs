@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Unity.VisualScripting;
+using UnityEngine.InputSystem;
 
 public class WorldLocation : MonoBehaviour
 {
@@ -88,8 +89,16 @@ public class WorldLocation : MonoBehaviour
         if (pregameScreen1 && Input.GetMouseButtonDown(0))
         {
             pregameScreen1 = false;
-            pregameScreen1 = true;
+            pregameScreen2 = true;
             prestory1.SetActive(false);
+            prestory2.SetActive(true);
+        }
+        else if(pregameScreen2 && Input.GetMouseButtonDown(0))
+        {
+            pregameScreen2 = false;
+            prestory2.SetActive(false);
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
         if(helpedDog && helpedAlpaca && helpedPenguins && helpedWolf && !helpedAllMarket)
         {

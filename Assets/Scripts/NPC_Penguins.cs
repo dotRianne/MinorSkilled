@@ -115,7 +115,7 @@ public class NPC_Penguins : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            playerInRange = true;
+            playerInRange = false;
             TXT_input.SetText("");
             TXT_notif.SetText("");
         }
